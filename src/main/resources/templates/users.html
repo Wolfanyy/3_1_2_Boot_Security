@@ -18,26 +18,26 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="user: ${users}">
+        <tr th:each="users: ${users}">
             <td>
-                <input type="hidden" name="id" th:value="${user.id}"
-                       th:attr="form=|form-update-${user.id}|" class="user-field"/>
-                <input type="text" id="name" name="name" th:value="${user.name}"
-                       th:attr="form=|form-update-${user.id}|" class="user-field" disabled required>
+                <input type="hidden" name="id" th:value="${users.id}"
+                       th:attr="form=|form-update-${users.id}|" class="users-field"/>
+                <input type="text" id="name" name="name" th:value="${users.name}"
+                       th:attr="form=|form-update-${users.id}|" class="users-field" disabled required>
             </td>
             <td>
-                <input type="number" id="age" name="age" th:value="${user.age}"
-                       th:attr="form=|form-update-${user.id}|" class="user-field" disabled required>
+                <input type="number" id="age" name="age" th:value="${users.age}"
+                       th:attr="form=|form-update-${users.id}|" class="users-field" disabled required>
             </td>
             <td>
-                <input type="text" id="email" name="email" th:value="${user.email}"
-                       th:attr="form=|form-update-${user.id}|" class="user-field" disabled required>
+                <input type="text" id="email" name="email" th:value="${users.email}"
+                       th:attr="form=|form-update-${users.id}|" class="users-field" disabled required>
             </td>
             <td class="actions">
-                <button type="button" class="button-edit" th:attr="form=|form-update-${user.id}|">Edit</button>
+                <button type="button" class="button-edit" th:attr="form=|form-update-${users.id}|">Edit</button>
             </td>
             <td class="actions">
-                <button type="submit" th:attr="form=|form-delete-${user.id}|" class="button-delete">Delete</button>
+                <button type="submit" th:attr="form=|form-delete-${users.id}|" class="button-delete">Delete</button>
             </td>
         </tr>
         <tr>
@@ -51,10 +51,10 @@
         </tr>
         </tbody>
     </table>
-    <div th:each="user : ${users}">
-        <form th:id="|form-update-${user.id}|" th:action="@{/users/update}" method="post"></form>
-        <form th:id="|form-delete-${user.id}|" th:action="@{/users/delete}" method="post">
-            <input type="hidden" name="id" th:value="${user.id}"/>
+    <div th:each="users : ${users}">
+        <form th:id="|form-update-${users.id}|" th:action="@{/users/update}" method="post"></form>
+        <form th:id="|form-delete-${users.id}|" th:action="@{/users/delete}" method="post">
+            <input type="hidden" name="id" th:value="${users.id}"/>
         </form>
     </div>
 </div>
