@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Users</title>
+    <link rel="stylesheet" href="/resources/css/style.css">
+    <script src="/resources/js/editMode.js" defer></script>
+</head>
+<body>
+<div>
+    <table>
+        <thead>
+        <tr>
+            <th><label for="name">name</label></th>
+            <th><label for="age">age</label></th>
+            <th><label for="email">email</label></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user: ${users}">
+            <td>
+                <input type="hidden" name="id" th:value="${user.id}"
+                       th:attr="form=|form-update-${user.id}|" class="user-field"/>
+                <input type="text" id="name" name="name" th:value="${user.name}"
+                       th:attr="form=|form-update-${user.id}|" class="user-field" disabled required>
+            </td>
+            <td>
+                <input type="number" id="age" name="age" th:value="${user.age}"
+                       th:attr="form=|form-update-${user.id}|" class="user-field" disabled required>
+            </td>
+            <td>
+                <input type="text" id="email" name="email" th:value="${user.email}"
+                       th:attr="form=|form-update-${user.id}|" class="user-field" disabled required>
+            </td>
+            <td class="actions">
+                <button type="button" class="button-edit" th:attr="form=|form-update-${user.id}|">Edit</button>
+            </td>
+            <td class="actions">
+                <button type="submit" th:attr="form=|form-delete-${user.id}|" class="button-delete">Delete</button>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>
+                <a href="users/new" class="button-link">Add User</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div th:each="user : ${users}">
+        <form th:id="|form-update-${user.id}|" th:action="@{/users/update}" method="post"></form>
+        <form th:id="|form-delete-${user.id}|" th:action="@{/users/delete}" method="post">
+            <input type="hidden" name="id" th:value="${user.id}"/>
+        </form>
+    </div>
+</div>
+</body>
+</html>
