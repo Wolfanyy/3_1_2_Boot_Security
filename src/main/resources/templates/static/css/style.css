@@ -1,0 +1,59 @@
+.button-link, button {
+    display: inline-block;
+    box-sizing: border-box;
+    width: 100px;
+    height: 40px;
+    padding: 8px 16px;
+    line-height: 24px;
+    text-align: center;
+    vertical-align: middle;
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 16px;
+    text-decoration: none;
+    appearance: none;
+}
+
+.button-link, .button-add {
+    background-color: #35d6dc;
+}
+
+.button-add {
+    float: right;
+    margin-top: 10px;
+}
+
+.button-edit {
+    background-color: #e88c52;
+}
+
+.button-delete {
+    background-color: #e34e64;
+}
+
+table {
+    box-sizing: border-box;
+    width: 100%;
+}
+
+td {
+    padding: 10px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+tbody td {
+    padding-top: 5px;
+}
+
+.actions {
+    width: 100px;
+}
+
+label, input {
+    display: inline-block;
+    height: 30px;
+    width: 100%;
+    font-size: 16px;
+}
