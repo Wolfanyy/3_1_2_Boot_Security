@@ -17,6 +17,7 @@ import java.util.Objects;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Accessors(chain = true)
 @Entity
 @Table(name = "users")
 public class User {

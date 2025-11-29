@@ -1,0 +1,60 @@
+package boot_security.service;
+
+import boot_security.dao.UserDao;
+import boot_security.model.User;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
+public class UserServiceImpl implements UserService {
+    private final UserDao userDao;
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<User> findAll() {
+        return userDao.findAll();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public User findById(Long id) {
+        return userDao.findById(id)
+                .orElseThrow(() ->
+                        new EntityNotFoundException("User " + id + " is not found"));
+    }
+
+    @Override
+    @Transactional
+    public User createUser(User user) {
+        return userDao.save(user);
+    }
+
+    private void updateEntity(User existingUser, User newUser) {
+        Optional.ofNullable(newUser.getName()).ifPresent(existingUser::setName);
+        Optional.ofNullable(newUser.getEmail()).ifPresent(existingUser::setEmail);
+        Optional.ofNullable(newUser.getAge()).ifPresent(existingUser::setAge);
+    }
+
+    @Override
+    @Transactional
+    public User updateUser(Long id, User newUser) {
+        User existingUser = userDao.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User " + id + " is not found"));
+        updateEntity(existingUser, newUser);
+        return userDao.save(existingUser);
+    }
+
+    @Override
+    @Transactional
+    public void deleteUser(Long id) {
+        User user = userDao.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User " + id + " is not found"));
+        userDao.delete(user);
+    }
+}
