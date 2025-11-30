@@ -12,6 +12,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -39,6 +40,14 @@ public class User {
     @Max(value = 100, message = "Age must be at most 100")
     private Integer age;
 
+    @ManyToMany
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -49,16 +58,16 @@ public class User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(email);
+        return Objects.hashCode(email);
     }
 
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
+                "name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", age=" + age +
+                ", roles=" + roles +
                 '}';
     }
 }
