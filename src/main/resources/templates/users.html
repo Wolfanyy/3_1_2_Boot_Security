@@ -21,17 +21,17 @@
         <tr th:each="users: ${users}">
             <td>
                 <input type="hidden" name="id" th:value="${users.id}"
-                       th:attr="form=|form-update-${users.id}|" class="users-field"/>
+                       th:attr="form=|form-update-${users.id}|" class="user-field"/>
                 <input type="text" id="name" name="name" th:value="${users.name}"
-                       th:attr="form=|form-update-${users.id}|" class="users-field" disabled required>
+                       th:attr="form=|form-update-${users.id}|" class="user-field" disabled required>
             </td>
             <td>
                 <input type="number" id="age" name="age" th:value="${users.age}"
-                       th:attr="form=|form-update-${users.id}|" class="users-field" disabled required>
+                       th:attr="form=|form-update-${users.id}|" class="user-field" disabled required>
             </td>
             <td>
                 <input type="text" id="email" name="email" th:value="${users.email}"
-                       th:attr="form=|form-update-${users.id}|" class="users-field" disabled required>
+                       th:attr="form=|form-update-${users.id}|" class="user-field" disabled required>
             </td>
             <td class="actions">
                 <button type="button" class="button-edit" th:attr="form=|form-update-${users.id}|">Edit</button>
@@ -52,9 +52,11 @@
         </tbody>
     </table>
     <div th:each="users : ${users}">
-        <form th:id="|form-update-${users.id}|" th:action="@{/users/update}" method="post"></form>
-        <form th:id="|form-delete-${users.id}|" th:action="@{/users/delete}" method="post">
-            <input type="hidden" name="id" th:value="${users.id}"/>
+        <form th:id="|form-update-${users.id}|" th:action="@{|/users/${users.id}|}" method="post">
+            <input type="hidden" name="_method" value="PATCH">
+        </form>
+        <form th:id="|form-delete-${users.id}|" th:action="@{|/users/${users.id}|}" method="post">
+            <input type="hidden" name="_method" value="DELETE">
         </form>
     </div>
 </div>
