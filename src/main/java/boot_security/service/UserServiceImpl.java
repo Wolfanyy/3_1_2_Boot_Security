@@ -1,8 +1,8 @@
 package boot_security.service;
 
 import boot_security.dao.UserDao;
+import boot_security.exception.UserNotFoundException;
 import boot_security.model.User;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,14 +28,14 @@ public class UserServiceImpl implements UserService {
     public User findById(Long id) {
         return userDao.findById(id)
                 .orElseThrow(() ->
-                        new EntityNotFoundException("User " + id + " is not found"));
+                        new UserNotFoundException("User " + id + " is not found"));
     }
 
     @Override
     @Transactional(readOnly = true)
     public User findByEmail(String email) {
         return userDao.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("User " + email + " is not found"));
+                .orElseThrow(() -> new UserNotFoundException("User " + email + " is not found"));
     }
 
     @Override
@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User updateUser(Long id, User newUser) {
         User existingUser = userDao.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User " + id + " is not found"));
+                .orElseThrow(() -> new UserNotFoundException("User " + id + " is not found"));
         updateEntity(existingUser, newUser);
         return userDao.save(existingUser);
     }
@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void deleteUser(Long id) {
         User user = userDao.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User " + id + " is not found"));
+                .orElseThrow(() -> new UserNotFoundException("User " + id + " is not found"));
         userDao.delete(user);
     }
 }
