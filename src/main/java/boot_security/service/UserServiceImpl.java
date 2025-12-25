@@ -32,6 +32,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public User findByEmail(String email) {
+        return userDao.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("User " + email + " is not found"));
+    }
+
+    @Override
     @Transactional
     public User createUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -42,6 +49,8 @@ public class UserServiceImpl implements UserService {
         Optional.ofNullable(newUser.getName()).ifPresent(existingUser::setName);
         Optional.ofNullable(newUser.getEmail()).ifPresent(existingUser::setEmail);
         Optional.ofNullable(newUser.getAge()).ifPresent(existingUser::setAge);
+        Optional.ofNullable(newUser.getPassword()).ifPresent
+                (pwd -> existingUser.setPassword(passwordEncoder.encode(pwd)));
     }
 
     @Override
