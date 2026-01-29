@@ -3,6 +3,7 @@ package boot_security.controller;
 import boot_security.model.User;
 import boot_security.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ import java.security.Principal;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/user")
+@PreAuthorize("hasAnyRole('USER','ADMIN')")
 public class UserController {
     private final UserService userService;
 
