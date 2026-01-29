@@ -22,21 +22,23 @@ public class Role implements GrantedAuthority {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "name", unique = true, nullable = false)
-    private String roleName;
+    private RoleName roleName;
 
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;
 
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
         if (!(o instanceof Role role)) return false;
-        return Objects.equals(roleName, role.roleName);
+        return roleName == role.roleName;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(roleName);
+        return roleName != null ? roleName.hashCode() : 0;
     }
 
     @Override
@@ -48,6 +50,6 @@ public class Role implements GrantedAuthority {
 
     @Override
     public String getAuthority() {
-        return roleName;
+        return roleName.name();
     }
 }

@@ -1,6 +1,6 @@
 package boot_security.service;
 
-import boot_security.dao.UserDao;
+import boot_security.dao.UserRepository;
 import boot_security.exception.UserNotFoundException;
 import boot_security.model.User;
 import lombok.RequiredArgsConstructor;
@@ -14,19 +14,19 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final UserDao userDao;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional(readOnly = true)
     public List<User> findAll() {
-        return userDao.findAll();
+        return userRepository.findAll();
     }
 
     @Override
     @Transactional(readOnly = true)
     public User findById(Long id) {
-        return userDao.findById(id)
+        return userRepository.findById(id)
                 .orElseThrow(() ->
                         new UserNotFoundException("User " + id + " is not found"));
     }
@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public User findByEmail(String email) {
-        return userDao.findByEmail(email)
+        return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User " + email + " is not found"));
     }
 
@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User createUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userDao.save(user);
+        return userRepository.save(user);
     }
 
     private void updateEntity(User existingUser, User newUser) {
@@ -56,17 +56,17 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User updateUser(Long id, User newUser) {
-        User existingUser = userDao.findById(id)
+        User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User " + id + " is not found"));
         updateEntity(existingUser, newUser);
-        return userDao.save(existingUser);
+        return userRepository.save(existingUser);
     }
 
     @Override
     @Transactional
     public void deleteUser(Long id) {
-        User user = userDao.findById(id)
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User " + id + " is not found"));
-        userDao.delete(user);
+        userRepository.delete(user);
     }
 }
