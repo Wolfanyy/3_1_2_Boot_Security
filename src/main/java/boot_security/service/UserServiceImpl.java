@@ -1,7 +1,10 @@
 package boot_security.service;
 
+import boot_security.dao.RoleRepository;
 import boot_security.dao.UserRepository;
 import boot_security.exception.UserNotFoundException;
+import boot_security.model.Role;
+import boot_security.model.RoleName;
 import boot_security.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,12 +13,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private static final RoleName DEFAULT_ROLE = RoleName.ROLE_USER;
 
     @Override
     @Transactional(readOnly = true)
@@ -43,6 +49,7 @@ public class UserServiceImpl implements UserService {
     public User createUser(User user) {
         checkEmailUnique(user.getEmail());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        assignDefaultRole(user);
         return userRepository.save(user);
     }
 
@@ -50,6 +57,12 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findByEmail(email).isPresent()) {
             throw new IllegalArgumentException("Email already exists");
         }
+    }
+
+    private void assignDefaultRole(User user) {
+        Role userRole = roleRepository.findByName(DEFAULT_ROLE)
+                .orElseThrow(() -> new IllegalStateException("Default role " + DEFAULT_ROLE + " not found"));
+        user.setRoles(Set.of(userRole));
     }
 
     private void updateEntity(User existingUser, User newUser) {
