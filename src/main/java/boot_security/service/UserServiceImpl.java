@@ -41,8 +41,15 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User createUser(User user) {
+        checkEmailUnique(user.getEmail());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
+    }
+
+    private void checkEmailUnique(String email) {
+        if (userRepository.findByEmail(email).isPresent()) {
+            throw new IllegalArgumentException("Email already exists");
+        }
     }
 
     private void updateEntity(User existingUser, User newUser) {
@@ -58,6 +65,9 @@ public class UserServiceImpl implements UserService {
     public User updateUser(Long id, User newUser) {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User " + id + " is not found"));
+        if (newUser.getEmail() != null && !newUser.getEmail().equals(existingUser.getEmail())) {
+            checkEmailUnique(newUser.getEmail());
+        }
         updateEntity(existingUser, newUser);
         return userRepository.save(existingUser);
     }

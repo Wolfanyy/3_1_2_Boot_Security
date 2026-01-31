@@ -46,6 +46,7 @@ public class AdminController {
                              Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("users", userService.findAll());
+            model.addAttribute("user", user);
             return "users";
         }
         userService.updateUser(id, user);
