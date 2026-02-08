@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-    private static final RoleName DEFAULT_ROLE = RoleName.ROLE_USER;
+    private static final RoleName DEFAULT_ROLE = RoleName.USER;
 
     @Override
     @Transactional(readOnly = true)
@@ -53,14 +53,31 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
+    @Transactional
+    public Optional<User> createAdmin(User user) {
+        if (!existsByEmail(user.getEmail())) {
+            Role adminRole = roleRepository.findByRoleName(RoleName.ADMIN)
+                    .orElseThrow(() -> new IllegalStateException("Role ADMIN must exist"));
+
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setRoles(Set.of(adminRole));
+            return Optional.of(userRepository.save(user));
+        }
+        return Optional.empty();
+    }
+
     private void checkEmailUnique(String email) {
         if (userRepository.findByEmail(email).isPresent()) {
             throw new IllegalArgumentException("Email already exists");
         }
     }
 
+    private boolean existsByEmail(String email) {
+        return userRepository.findByEmail(email).isPresent();
+    }
+
     private void assignDefaultRole(User user) {
-        Role userRole = roleRepository.findByName(DEFAULT_ROLE)
+        Role userRole = roleRepository.findByRoleName(DEFAULT_ROLE)
                 .orElseThrow(() -> new IllegalStateException("Default role " + DEFAULT_ROLE + " not found"));
         user.setRoles(Set.of(userRole));
     }

@@ -3,6 +3,7 @@ package boot_security.service;
 import boot_security.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface UserService {
@@ -13,6 +14,8 @@ public interface UserService {
     User findByEmail(String email);
 
     User createUser(User user);
+
+    Optional<User> createAdmin(User user);
 
     User updateUser(Long id, User user);
 

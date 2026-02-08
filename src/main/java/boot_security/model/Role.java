@@ -1,20 +1,18 @@
 package boot_security.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.springframework.security.core.GrantedAuthority;
-
-import java.util.Objects;
 import java.util.Set;
 
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@Accessors(chain = true)
 @Entity
 @Table(name = "roles")
 public class Role implements GrantedAuthority {
@@ -28,6 +26,10 @@ public class Role implements GrantedAuthority {
 
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;
+
+    public Role(RoleName roleName) {
+        this.roleName = roleName;
+    }
 
     @Override
     public boolean equals(Object o) {
