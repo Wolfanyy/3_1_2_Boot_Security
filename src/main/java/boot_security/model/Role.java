@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.springframework.security.core.GrantedAuthority;
+
 import java.util.Set;
 
 
@@ -52,6 +53,6 @@ public class Role implements GrantedAuthority {
 
     @Override
     public String getAuthority() {
-        return roleName.name();
+        return "ROLE_" + roleName.name();
     }
 }
