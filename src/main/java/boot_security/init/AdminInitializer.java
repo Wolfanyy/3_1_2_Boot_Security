@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @RequiredArgsConstructor
 public class AdminInitializer implements CommandLineRunner {
-    private final RoleService roleService;
     private final UserService userService;
 
     @Value("${app.admin.username}")
@@ -31,10 +30,7 @@ public class AdminInitializer implements CommandLineRunner {
     private Integer adminAge;
 
     @Override
-    @Transactional
     public void run(String... args) throws Exception {
-        roleService.ensureRoleExists(RoleName.ADMIN);
-        roleService.ensureRoleExists(RoleName.USER);
 
         User admin = User.builder()
                 .name(adminUsername)

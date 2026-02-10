@@ -19,9 +19,8 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
+    private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
-    private static final RoleName DEFAULT_ROLE = RoleName.USER;
 
     @Override
     @Transactional(readOnly = true)
@@ -49,18 +48,18 @@ public class UserServiceImpl implements UserService {
     public User createUser(User user) {
         checkEmailUnique(user.getEmail());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        assignDefaultRole(user);
+        user.setRoles(Set.of(roleService.getOrCreateRole(RoleName.USER)));
         return userRepository.save(user);
     }
 
     @Transactional
     public Optional<User> createAdmin(User user) {
         if (!existsByEmail(user.getEmail())) {
-            Role adminRole = roleRepository.findByRoleName(RoleName.ADMIN)
-                    .orElseThrow(() -> new IllegalStateException("Role ADMIN must exist"));
+            Role adminRole = roleService.getOrCreateRole(RoleName.ADMIN);
+            Role userRole = roleService.getOrCreateRole(RoleName.USER);
 
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            user.setRoles(Set.of(adminRole));
+            user.setRoles(Set.of(adminRole, userRole));
             return Optional.of(userRepository.save(user));
         }
         return Optional.empty();
@@ -74,12 +73,6 @@ public class UserServiceImpl implements UserService {
 
     private boolean existsByEmail(String email) {
         return userRepository.findByEmail(email).isPresent();
-    }
-
-    private void assignDefaultRole(User user) {
-        Role userRole = roleRepository.findByRoleName(DEFAULT_ROLE)
-                .orElseThrow(() -> new IllegalStateException("Default role " + DEFAULT_ROLE + " not found"));
-        user.setRoles(Set.of(userRole));
     }
 
     private void updateEntity(User existingUser, User newUser) {

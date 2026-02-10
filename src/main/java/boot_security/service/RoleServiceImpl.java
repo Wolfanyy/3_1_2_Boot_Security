@@ -14,8 +14,8 @@ public class RoleServiceImpl implements RoleService {
     private final RoleRepository roleRepository;
 
     @Override
-    public void ensureRoleExists(RoleName roleName) {
-        roleRepository.findByRoleName(roleName)
+    public Role getOrCreateRole(RoleName roleName) {
+        return roleRepository.findByRoleName(roleName)
                 .orElseGet(() -> roleRepository.save(new Role(roleName)));
     }
 }

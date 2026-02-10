@@ -1,8 +1,9 @@
 package boot_security.service;
 
+import boot_security.model.Role;
 import boot_security.model.RoleName;
 
 
 public interface RoleService {
-    void ensureRoleExists(RoleName roleName);
+    Role getOrCreateRole(RoleName roleName);
 }
